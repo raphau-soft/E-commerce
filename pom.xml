@@ -60,8 +60,8 @@
         <profile>
             <id>build-all</id>
             <modules>
-                <module>frontend</module>
-                <module>backend</module>
+                <module>e-commerce-frontend</module>
+                <module>e-commerce-backend</module>
             </modules>
         </profile>
     </profiles>
