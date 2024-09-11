@@ -1,24 +1,22 @@
-package com.devraf.e_commerce.payload.signup;
+package com.devraf.e_commerce.utils.payload.login;
 
-import com.devraf.e_commerce.annotations.Password;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class SignupRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginRequest {
     @NotBlank
     @Size(min = 3, max = 100)
-    private String username;
-
-    @NotBlank
     @Email
-    @Size(max = 100)
     private String email;
 
-    @Password
+    @NotBlank
+    @Size(max = 100)
     private String password;
-
-    private String confirmationPassword;
 }

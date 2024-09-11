@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.payload.error;
+package com.devraf.e_commerce.utils.payload.error;
 
 import lombok.Builder;
 import lombok.Data;

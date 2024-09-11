@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.exception;
+package com.devraf.e_commerce.utils.exception;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +9,8 @@ import java.util.List;
 @Data
 @Builder
 public class ExceptionResponse {
-    private OffsetDateTime timestamp;
     private int status;
     private String error;
     private List<String> message;
-    private String path;
+    private OffsetDateTime timestamp;
 }

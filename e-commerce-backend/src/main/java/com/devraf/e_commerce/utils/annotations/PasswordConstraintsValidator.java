@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.annotations;
+package com.devraf.e_commerce.utils.annotations;
 
 import org.passay.*;
 
@@ -22,14 +22,12 @@ public class PasswordConstraintsValidator implements ConstraintValidator<Passwor
         );
 
         RuleResult result = passwordValidator.validate(new PasswordData(password));
-        if (result.isValid()) {
-            return true;
+        if (!result.isValid()) {
+            constraintValidatorContext.buildConstraintViolationWithTemplate(passwordValidator.getMessages(result).stream().findFirst().get())
+                    .addConstraintViolation()
+                    .disableDefaultConstraintViolation();
         }
 
-        constraintValidatorContext.buildConstraintViolationWithTemplate(passwordValidator.getMessages(result).stream().findFirst().get())
-                .addConstraintViolation()
-                .disableDefaultConstraintViolation();
-
-        return false;
+        return result.isValid();
     }
 }

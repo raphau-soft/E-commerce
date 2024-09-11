@@ -1,7 +1,10 @@
 CREATE TABLE "users" (
   "id" bigint PRIMARY KEY,
   "username" varchar,
-  "email" varchar,
+  "name" varchar,
+  "surname" varchar,
+  "phone_number" varchar,
+  "email" varchar UNIQUE,
   "password" varchar,
   "role" varchar,
   "active" boolean,
@@ -13,6 +16,9 @@ CREATE TABLE "users" (
 CREATE SEQUENCE IF NOT EXISTS user_seq START WITH 1 INCREMENT BY 1;
 
 CREATE UNIQUE INDEX idx_user_username ON "users" ("username");
+CREATE UNIQUE INDEX idx_user_name ON "users" ("name");
+CREATE UNIQUE INDEX idx_user_surname ON "users" ("surname");
+CREATE UNIQUE INDEX idx_user_phone_number ON "users" ("phone_number");
 CREATE UNIQUE INDEX idx_user_email ON "users" ("email");
 CREATE INDEX idx_user_role ON "users" ("role");
 CREATE INDEX idx_user_created_at ON "users" ("created_at");
@@ -115,6 +121,22 @@ CREATE SEQUENCE IF NOT EXISTS order_products_seq START WITH 1 INCREMENT BY 1;
 
 CREATE INDEX idx_order_products_order_id ON "order_products" ("order_id");
 CREATE INDEX idx_order_products_product_id ON "order_products" ("product_id");
+
+CREATE TABLE "token" (
+  "id" bigint PRIMARY KEY,
+  "user_id" bigint,
+  "token" varchar,
+  "token_type" varchar,
+  "active" boolean,
+  "created_at" timestamp,
+  "expired_at" timestamp,
+  "updated_at" timestamp
+);
+
+CREATE SEQUENCE IF NOT EXISTS token_seq START WITH 1 INCREMENT BY 1;
+
+CREATE INDEX idx_token ON "token" ("token");
+CREATE INDEX idx_token_user_id ON "token" ("user_id");
 
 CREATE TABLE "reviews" (
   "id" bigint PRIMARY KEY,

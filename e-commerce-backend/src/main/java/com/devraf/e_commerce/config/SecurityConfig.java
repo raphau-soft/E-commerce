@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.security.config;
+package com.devraf.e_commerce.config;
 
 import com.devraf.e_commerce.security.service.UserInfoService;
 import org.springframework.context.annotation.Bean;

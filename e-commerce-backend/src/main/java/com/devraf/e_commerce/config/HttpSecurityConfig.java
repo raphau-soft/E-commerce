@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.security.config;
+package com.devraf.e_commerce.config;
 
 import com.devraf.e_commerce.security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,12 @@ public class HttpSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("api/auth/user/**").hasAuthority("ROLE_USER")
                         .requestMatchers("api/auth/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().permitAll())
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .cors(AbstractHttpConfigurer::disable)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return security.build();
     }

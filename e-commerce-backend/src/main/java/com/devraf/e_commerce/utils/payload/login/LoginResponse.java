@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.payload.login;
+package com.devraf.e_commerce.utils.payload.login;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class LoginResponse {
     private String token;
+    private String refreshToken;
 }

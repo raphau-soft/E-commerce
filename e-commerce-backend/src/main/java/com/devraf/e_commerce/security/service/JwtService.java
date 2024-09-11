@@ -1,19 +1,27 @@
 package com.devraf.e_commerce.security.service;
 
+import com.devraf.e_commerce.db.entity.Token;
+import com.devraf.e_commerce.db.entity.User;
+import com.devraf.e_commerce.db.repository.TokenDAO;
+import com.devraf.e_commerce.utils.Constants;
+import com.devraf.e_commerce.utils.TokenEnum;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Setter
@@ -21,20 +29,64 @@ import java.util.function.Function;
 @Component
 public class JwtService {
 
+    @Autowired
+    private TokenDAO tokenDAO;
+
     @Value("${security.jwt.secret.key}")
     private String SECRET;
 
-    public String generateToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+    public Optional<Token> getToken(String token) {
+        return tokenDAO.findByToken(token);
     }
 
-    private String createToken(Map<String, Object> claims, String username) {
+    public void deleteToken(String token) {
+        tokenDAO.deleteByToken(token);
+    }
+
+    public Token createToken(User user, TokenEnum tokenType) {
+        Date now = new Date();
+        Date expirationAt = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TIMES.get(tokenType));
+
+        Token token = tokenDAO.findByUserIdAndTokenType(user.getId(), tokenType.name())
+                .map(existingToken -> updateTokenIfExpired(existingToken, user, now, expirationAt))
+                .orElseGet(() -> createNewToken(user, tokenType, now, expirationAt));
+
+        tokenDAO.save(token);
+
+        return token;
+    }
+
+    private Token updateTokenIfExpired(Token existingToken, User user, Date now, Date expirationAt) {
+        try {
+            verifyToken(existingToken.getToken());
+        } catch (ExpiredJwtException e) {
+            existingToken.setToken(generateToken(user.getEmail(), now, expirationAt));
+            existingToken.setExpiredAt(expirationAt);
+            existingToken.setUpdatedAt(now);
+        }
+        return existingToken;
+    }
+
+    private Token createNewToken(User user, TokenEnum tokenType, Date now, Date expirationAt) {
+        return Token.builder()
+                .id(0L)
+                .token(generateToken(user.getEmail(), now, expirationAt))
+                .tokenType(tokenType.name())
+                .user(user)
+                .active(true)
+                .createdAt(now)
+                .expiredAt(expirationAt)
+                .build();
+    }
+
+    private String generateToken(String username, Date createdAt, Date expirationAt) {
+        Map<String, Object> claims = new HashMap<>();
+
         return Jwts.builder()
                 .claims().add(claims)
                 .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .issuedAt(createdAt)
+                .expiration(expirationAt)
                 .and()
                 .signWith(getSignKey(), Jwts.SIG.HS256)
                 .compact();
@@ -45,7 +97,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -58,20 +110,25 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Jws<Claims> verifyToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSignKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseSignedClaims(token);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return verifyToken(token).getPayload();
     }
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails user) {
-        final String username = extractUsername(token);
-        return (username.equals(user.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        return tokenDAO.findByToken(token)
+                .filter(Token::getActive)
+                .filter(t -> !isTokenExpired(t.getToken()))
+                .isPresent();
     }
 }

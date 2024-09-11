@@ -20,10 +20,10 @@ public class UserInfoService implements UserDetailsService {
     private PasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userDetail = repository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userDetail = repository.findByEmail(email);
 
         return userDetail.map(UserInfoDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 }
