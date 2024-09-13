@@ -1,0 +1,21 @@
+@import './variables.scss';
+
+.button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    height: 40px;
+    color: #444;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: bold;
+
+    &--primary {
+        background-color: $button-background-color;
+        color: #fff;
+    }
+
+    &--secondary {
+        color: var(--primary);
+        border-color: #333;
+    }
+}

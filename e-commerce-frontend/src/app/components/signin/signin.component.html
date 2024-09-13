@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="card">
+        <div class="form-container">
+            <form class="form" [formGroup]="signinForm" (ngSubmit)="submit()">
+                <h1 class="title">Welcome back!</h1>
+                <div eInput>
+                    <input type="email" required id="emailInput" formControlName="email" placeholder=" " />
+                    <label for="emailInput">Email</label>
+                    @if(signinFormControl.email.touched && signinFormControl.email.errors?.email) {
+                    <span class="text-danger">
+                        Enter a valid email address
+                    </span>
+                    }
+                </div>
+                <div eInput>
+                    <input id="passwordInput" required type="password" formControlName="password" placeholder=" " />
+                    <label for="passwordInput">Password</label>
+                    @if(signinFormControl.password.touched &&
+                    signinFormControl.password.errors?.required) {
+                    <span class="text-danger">
+                        Password is required
+                    </span>
+                    }
+                </div>
+                <div class="remember-reset-password">
+                    <div class="checkbox">
+                        <input id="rememberMe" type="checkbox" formControlName="rememberMe">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#">Reset password</a>
+                </div>
+                <button primary-button class="submit-button">Sign in</button>
+                <span>Don't have an account? <a routerLink="/signup">Sign up</a></span>
+            </form>
+        </div>
+        <div class="side">
+            <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="500px"
+                height="500px" viewBox="0 0 1024 1024" version="1.1">
+                <defs>
+                    <linearGradient x1="50%" y1="0%" x2="51.8975743%" y2="100%" id="linearGradient-1">
+                        <stop stop-color="#A8BCFF" offset="0%" />
+                        <stop stop-color="#EEF2FF" offset="100%" />
+                        <stop stop-color="#4970F3" offset="100%" />
+                    </linearGradient>
+                    <circle id="path-2" cx="512" cy="512" r="400" />
+                    <linearGradient x1="-1.38777878e-15%" y1="50%" x2="100%" y2="33.2627603%" id="linearGradient-4">
+                        <stop stop-color="#80A9FA" offset="0%" />
+                        <stop stop-color="#4970F3" offset="100%" />
+                    </linearGradient>
+                    <linearGradient x1="-1.38777878e-15%" y1="50%" x2="100%" y2="36.7758405%" id="linearGradient-5">
+                        <stop stop-color="#80A9FA" offset="0%" />
+                        <stop stop-color="#4970F3" offset="100%" />
+                    </linearGradient>
+                    <linearGradient x1="19.3866826%" y1="50%" x2="80.6133174%" y2="28.1391154%" id="linearGradient-6">
+                        <stop stop-color="#80A9FA" offset="0%" />
+                        <stop stop-color="#4970F3" offset="100%" />
+                    </linearGradient>
+                </defs>
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2" />
+                    </mask>
+                    <use fill="url(#linearGradient-1)" opacity="0.604337" xlink:href="#path-2" />
+                    <path
+                        d="M639.714749,575.43943 L639.714749,476.142518 C639.714749,403.914489 582.405186,345.12114 512,345.12114 C441.594814,345.12114 384.285251,403.914489 384.285251,476.142518 L384.285251,575.372922 C384.285251,584.551069 377.089141,591.933492 368.142626,591.933492 C359.19611,591.933492 352,584.551069 352,575.372922 L352,476.142518 C352,432.446556 368.661264,391.27791 399.001621,360.218527 C429.277147,329.159145 469.471637,312 512,312 C554.528363,312 594.722853,329.092637 624.998379,360.218527 C655.273906,391.27791 672,432.513064 672,476.142518 L672,575.372922 C672,584.551069 664.73906,592 655.857374,592 C646.910859,592 639.714749,584.617577 639.714749,575.43943 Z"
+                        fill="url(#linearGradient-4)" fill-rule="nonzero" />
+                    <path
+                        d="M782,492 L782.002828,807.127822 C710.848923,872.259978 616.065351,912 512,912 C407.934159,912 313.150184,872.259604 241.996167,807.126901 L242,492 L782,492 Z"
+                        fill="url(#linearGradient-5)" fill-rule="nonzero" />
+                    <polygon fill="url(#linearGradient-6)" fill-rule="nonzero"
+                        points="272 402 342.422705 402 342.422705 492 272 492" />
+                    <polygon fill="url(#linearGradient-6)" fill-rule="nonzero"
+                        points="691.577295 402 762 402 762 492 691.577295 492" />
+                    <path
+                        d="M720.14201,445.882619 C720.07669,432.13544 733.01004,415.679458 754.761582,402 L509.419862,402.13544 L267.997339,402 C289.356961,415.611738 302.747551,432.13544 302.682231,445.882619 C302.551591,467.756208 276.097012,482.654628 242,492 L782,492 C747.249788,482.722348 720.27265,467.823928 720.14201,445.882619 Z"
+                        fill="#F4F7FF" fill-rule="nonzero" />
+                    <path
+                        d="M352,666.641016 C364.376043,673.786328 379.623957,673.786328 392,666.641016 C404.376043,659.495704 412,646.290623 412,632 C412,609.90861 394.09139,592 372,592 C349.90861,592 332,609.90861 332,632 C332,646.290623 339.623957,659.495704 352,666.641016 Z"
+                        fill="#F4F7FF" fill-rule="nonzero" />
+                    <path
+                        d="M642,666.641016 C654.376043,673.786328 669.623957,673.786328 682,666.641016 C694.376044,659.495704 702,646.290623 702,632 C702,617.709377 694.376044,604.504296 682,597.358984 C669.623957,590.213672 654.376043,590.213672 642,597.358984 C629.623956,604.504296 622,617.709377 622,632 C622,646.290623 629.623956,659.495704 642,666.641016 Z"
+                        fill="#F4F7FF" fill-rule="nonzero" />
+                    <path
+                        d="M639.714749,625.43943 L639.714749,526.142518 C639.714749,453.914489 582.405186,395.12114 512,395.12114 C441.594814,395.12114 384.285251,453.914489 384.285251,526.142518 L384.285251,625.43943 C384.285251,634.617577 377.089141,642 368.142626,642 C359.19611,642 352,634.617577 352,625.43943 L352,526.142518 C352,482.446556 368.661264,441.27791 399.001621,410.218527 C429.277147,379.159145 469.471637,362 512,362 C554.528363,362 594.722853,379.092637 624.998379,410.218527 C655.273906,441.27791 672,482.513064 672,526.142518 L672,625.43943 C672,634.551069 664.73906,642 655.857374,642 C646.910859,642 639.714749,634.617577 639.714749,625.43943 Z"
+                        fill="url(#linearGradient-4)" fill-rule="nonzero" />
+                </g>
+            </svg>
+        </div>
+    </div>
+</div>
