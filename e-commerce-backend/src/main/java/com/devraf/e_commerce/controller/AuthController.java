@@ -5,12 +5,12 @@ import com.devraf.e_commerce.utils.TokenEnum;
 import com.devraf.e_commerce.utils.exception.UserNotActiveException;
 import com.devraf.e_commerce.utils.payload.login.LoginRequest;
 import com.devraf.e_commerce.utils.payload.login.LoginResponse;
+import com.devraf.e_commerce.utils.payload.signup.ConfirmAccountRequest;
 import com.devraf.e_commerce.utils.payload.signup.SignupRequest;
 import com.devraf.e_commerce.rabbit.SignUpProducer;
 import com.devraf.e_commerce.security.service.JwtService;
 import com.devraf.e_commerce.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(value = "*")
 public class AuthController {
 
     @Autowired
@@ -53,9 +54,9 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/confirm/{token}")
-    public ResponseEntity confirmAccount(@PathVariable("token") @NotBlank String token) {
-        userService.confirmUser(token);
+    @PutMapping("/confirm")
+    public ResponseEntity confirmAccount(@RequestBody @Valid ConfirmAccountRequest request) {
+        userService.confirmUser(request);
         return ResponseEntity.ok().build();
     }
 

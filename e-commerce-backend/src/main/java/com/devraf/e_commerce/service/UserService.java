@@ -4,9 +4,12 @@ import com.devraf.e_commerce.db.entity.User;
 import com.devraf.e_commerce.db.repository.UserDAO;
 import com.devraf.e_commerce.security.service.JwtService;
 import com.devraf.e_commerce.utils.TokenEnum;
+import com.devraf.e_commerce.utils.exception.TokenNotValidException;
+import com.devraf.e_commerce.utils.payload.signup.ConfirmAccountRequest;
 import com.devraf.e_commerce.utils.payload.signup.SignupRequest;
 import com.devraf.e_commerce.utils.RolesEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,18 +37,33 @@ public class UserService {
             User user = buildUser(request);
             user = userDAO.save(user);
             emailService.sendEmail(user.getEmail(), "E-commerce sign up", "Your account have been created. Click link below to activate it.\n" +
-                    "http://localhost:8080/api/auth/confirm/" + jwtService.createToken(user, TokenEnum.CONFIRM_ACCOUNT).getToken());
+                    "http://localhost:8080/e-commerce/confirm/" + jwtService.createToken(user, TokenEnum.CONFIRM_ACCOUNT).getToken());
         } else {
             emailService.sendEmail(userOptional.get().getEmail(), "E-commerce sign up", "Hello did you forget that you have an active account?");
         }
     }
 
-    public void confirmUser(String token) {
-        if(jwtService.validateToken(token)) {
-            String email = jwtService.extractEmail(token);
-            userDAO.activateUserByEmail(email);
-            jwtService.deleteToken(token);
+    public void confirmUser(ConfirmAccountRequest request) {
+        if (jwtService.isTokenValid(request.getToken(), TokenEnum.CONFIRM_ACCOUNT)) {
+            String userEmail = jwtService.extractEmail(request.getToken());
+            User user = userDAO.findByEmail(userEmail)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+
+            updateUserDetails(user, request);
+            jwtService.deleteToken(request.getToken());
+        } else {
+            throw new TokenNotValidException("Token is invalid: " + request.getToken());
         }
+    }
+
+    private void updateUserDetails(User user, ConfirmAccountRequest request) {
+        user.setActive(true);
+        user.setUsername(request.getUsername());
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setPhoneNumber(request.getPhoneNumber());
+
+        userDAO.save(user);
     }
 
     private User buildUser(SignupRequest request) {

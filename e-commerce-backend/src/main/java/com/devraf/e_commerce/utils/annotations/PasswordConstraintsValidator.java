@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class PasswordConstraintsValidator implements ConstraintValidator<Password, String> {
     @Override
     public boolean isValid(String password, ConstraintValidatorContext constraintValidatorContext) {
+        if(password == null) return true;
         PasswordValidator passwordValidator = new PasswordValidator(
                 Arrays.asList(
                         new LengthRule(10, 128),

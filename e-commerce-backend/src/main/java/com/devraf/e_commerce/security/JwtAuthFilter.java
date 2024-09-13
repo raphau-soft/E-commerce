@@ -1,6 +1,7 @@
 package com.devraf.e_commerce.security;
 
 import com.devraf.e_commerce.security.service.JwtService;
+import com.devraf.e_commerce.utils.TokenEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            if (jwtService.validateToken(token)) {
+            if (jwtService.isTokenValid(token, TokenEnum.AUTH)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

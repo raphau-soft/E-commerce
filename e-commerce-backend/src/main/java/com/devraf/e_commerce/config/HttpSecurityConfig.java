@@ -35,7 +35,7 @@ public class HttpSecurityConfig {
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .cors(AbstractHttpConfigurer::disable)
+//                .cors(AbstractHttpConfigurer::disable)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return security.build();
     }

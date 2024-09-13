@@ -15,7 +15,8 @@ public class PasswordConfirmValidator implements ConstraintValidator<ConfirmPass
 
     @Override
     public boolean isValid(SignupRequest request, ConstraintValidatorContext context) {
-        boolean isValid = request.getPassword().equals(request.getConfirmationPassword());
+        if(request.getPassword() == null) return true;
+        boolean isValid = request.getPassword().equals(request.getConfirmPassword());
 
         if(!isValid) {
             context.buildConstraintViolationWithTemplate(message)

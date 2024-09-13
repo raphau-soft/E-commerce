@@ -26,11 +26,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionResponse response = ExceptionResponse.builder()
                 .message(List.of("Invalid email or password!"))
                 .status(HttpStatus.FORBIDDEN.value())
-                .error("Forbidden")
+                .error(HttpStatus.FORBIDDEN.name())
                 .timestamp(OffsetDateTime.now())
                 .build();
         return handleExceptionInternal(e, response,
                 new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(value = {TokenNotValidException.class})
+    protected ResponseEntity<Object> handleAuthenticationException(TokenNotValidException e, WebRequest request) {
+        ExceptionResponse response = ExceptionResponse.builder()
+                .message(List.of("Token is invalid"))
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error(HttpStatus.UNAUTHORIZED.name())
+                .timestamp(OffsetDateTime.now())
+                .build();
+        return handleExceptionInternal(e, response,
+                new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @Override

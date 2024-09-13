@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface TokenDAO extends JpaRepository<Token, Long> {
     Optional<Token> findByUserIdAndTokenType(Long userId, String tokenType);
-    Optional<Token> findByToken(String token);
+    Optional<Token> findByTokenAndTokenType(String token, String tokenType);
 
     @Modifying
     @Transactional

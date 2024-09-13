@@ -35,10 +35,6 @@ public class JwtService {
     @Value("${security.jwt.secret.key}")
     private String SECRET;
 
-    public Optional<Token> getToken(String token) {
-        return tokenDAO.findByToken(token);
-    }
-
     public void deleteToken(String token) {
         tokenDAO.deleteByToken(token);
     }
@@ -125,8 +121,8 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token) {
-        return tokenDAO.findByToken(token)
+    public Boolean isTokenValid(String token, TokenEnum tokenEnum) {
+        return tokenDAO.findByTokenAndTokenType(token, tokenEnum.name())
                 .filter(Token::getActive)
                 .filter(t -> !isTokenExpired(t.getToken()))
                 .isPresent();
