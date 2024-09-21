@@ -16,7 +16,7 @@ public class SignupRequest implements Serializable {
     @NotNull
     @NotBlank
     @Email
-    @Size(max = 100)
+    @Size(min = 5, max = 254)
     private String email;
 
     @NotNull

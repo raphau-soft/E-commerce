@@ -1,9 +1,12 @@
-import { NgModule } from '@angular/core';
-import { PrimaryButtonDirective, SecondaryButtonDirective } from './button.directive';
+import { NgModule } from "@angular/core";
+import {
+  PrimaryButtonDirective,
+  SecondaryButtonDirective,
+} from "./button.directive";
 
 @NgModule({
-    declarations: [PrimaryButtonDirective, SecondaryButtonDirective],
-    imports: [],
-    exports: [PrimaryButtonDirective, SecondaryButtonDirective],
+  declarations: [PrimaryButtonDirective, SecondaryButtonDirective],
+  imports: [],
+  exports: [PrimaryButtonDirective, SecondaryButtonDirective],
 })
-export class ButtonModule { }
+export class ButtonModule {}

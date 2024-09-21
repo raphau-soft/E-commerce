@@ -54,7 +54,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/confirm")
+    @PutMapping("/signup/confirm")
     public ResponseEntity confirmAccount(@RequestBody @Valid ConfirmAccountRequest request) {
         userService.confirmUser(request);
         return ResponseEntity.ok().build();

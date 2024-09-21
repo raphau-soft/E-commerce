@@ -1,27 +1,27 @@
-@import 'scss/fonts.scss';
-@import 'scss/variables.scss';
-@import 'scss/button.scss';
-@import 'scss/input.scss';
+@import "scss/fonts.scss";
+@import "scss/variables.scss";
+@import "scss/button.scss";
+@import "scss/input.scss";
 
 body {
-    @extend .roboto-regular;
-    margin: 0px;
-    padding: 0px;
-    background-color: rgb(245, 245, 245);
+  @extend .roboto-regular;
+  margin: 0px;
+  padding: 0px;
+  background-color: rgb(245, 245, 245);
 }
 
 a {
-    @extend .roboto-bold;
-    text-decoration: none;
-    color: $third-text-color;
+  @extend .roboto-bold;
+  text-decoration: none;
+  color: $third-text-color;
 
-    &:hover {
-        color: $third-text-color-hover;
-    }
+  &:hover {
+    color: $third-text-color-hover;
+  }
 }
 
 @media (max-width: 300px) {
-    body {
-        display: none;
-    }
+  body {
+    display: none;
+  }
 }
