@@ -13,7 +13,7 @@ public class PasswordConstraintsValidator implements ConstraintValidator<Passwor
         if(password == null) return true;
         PasswordValidator passwordValidator = new PasswordValidator(
                 Arrays.asList(
-                        new LengthRule(10, 128),
+                        new LengthRule(12, 64),
                         new CharacterRule(EnglishCharacterData.UpperCase, 1),
                         new CharacterRule(EnglishCharacterData.LowerCase, 1),
                         new CharacterRule(EnglishCharacterData.Digit, 1),

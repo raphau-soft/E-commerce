@@ -1,19 +1,19 @@
-import { Directive, HostBinding } from '@angular/core';
+import { Directive, HostBinding } from "@angular/core";
 
 @Directive({
-    selector: '[primary-button]',
+  selector: "[primary-button]",
 })
 export class PrimaryButtonDirective {
-    @HostBinding('class') get classes(): string {
-        return 'button button--primary';
-    }
+  @HostBinding("class") get classes(): string {
+    return "button button--primary";
+  }
 }
 
 @Directive({
-    selector: '[secondary-button]',
+  selector: "[secondary-button]",
 })
 export class SecondaryButtonDirective {
-    @HostBinding('class') get classes(): string {
-        return 'button button--secondary';
-    }
+  @HostBinding("class") get classes(): string {
+    return "button button--secondary";
+  }
 }

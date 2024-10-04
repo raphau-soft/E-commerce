@@ -106,54 +106,61 @@
       </svg>
     </div>
     <div class="form-container">
-      <form class="form" [formGroup]="signupForm" (ngSubmit)="submit()">
-        <h1 class="title">Join us today!</h1>
-
+      <form class="form" [formGroup]="signupConfrimForm" (ngSubmit)="submit()">
+        <h1 class="title">Confirm your account information!</h1>
         <e-form-field>
           <div inputStyle>
             <input
               inputError
-              type="email"
-              id="emailInput"
-              formControlName="email"
+              type="text"
+              required
+              id="usernameInput"
+              formControlName="username"
               placeholder=" "
             />
-            <label for="emailInput">Email</label>
+            <label for="usernameInput">Username</label>
           </div>
         </e-form-field>
-
         <e-form-field>
           <div inputStyle>
             <input
               inputError
-              id="passwordInput"
-              type="password"
-              formControlName="password"
+              id="nameInput"
+              required
+              type="text"
+              formControlName="name"
               placeholder=" "
             />
-            <label for="passwordInput">Password</label>
+            <label for="nameInput">Name</label>
           </div>
         </e-form-field>
-
         <e-form-field>
           <div inputStyle>
             <input
               inputError
-              id="confirmPasswordInput"
-              type="password"
-              formControlName="confirmPassword"
+              id="surnameInput"
+              required
+              type="text"
+              formControlName="surname"
               placeholder=" "
             />
-            <label for="confirmPasswordInput">Confirm password</label>
+            <label for="surnameInput">Surname</label>
           </div>
         </e-form-field>
-
-        <div class="submit-container">
-          <button primary-button>Sign up</button>
-          <span
-            >Already have an account? <a routerLink="/signin">Sign in</a></span
-          >
-        </div>
+        <e-form-field>
+          <div inputStyle>
+            <input
+              inputError
+              id="phoneNumberInput"
+              required
+              type="text"
+              formControlName="phoneNumber"
+              placeholder=" "
+            />
+            <label for="phoneNumberInput">Phone number</label>
+          </div>
+        </e-form-field>
+        <button primary-button class="submit-button">Confirm</button>
       </form>
     </div>
   </div>

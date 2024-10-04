@@ -60,6 +60,7 @@ public class LoggingFilter extends OncePerRequestFilter {
         StringBuilder builder = new StringBuilder();
         for (String headerName : headerNames) {
             String header = headerValueResolver.apply(headerName);
+            if(headerName.toLowerCase().endsWith("token")) header = MASK;
             builder.append(String.format("%s=%s", headerName, header)).append("\n");
         }
         return builder.toString();
@@ -85,8 +86,6 @@ public class LoggingFilter extends OncePerRequestFilter {
             JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
             maskSensitiveData(jsonObject, "password");
             maskSensitiveData(jsonObject, "confirmationPassword");
-            maskSensitiveData(jsonObject, "token");
-            maskSensitiveData(jsonObject, "refreshToken");
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             return gson.toJson(jsonObject);
