@@ -60,14 +60,16 @@ public class AuthController {
     public ResponseEntity<LoginResponse> rememberMe(HttpServletRequest request, HttpServletResponse response) {
         String rememberMeToken = getCookieValue(request, TokenEnum.REMEMBER_ME_TOKEN.name());
 
-        if(jwtService.isTokenValid(rememberMeToken, TokenEnum.REMEMBER_ME_TOKEN)) {
+        if (jwtService.isTokenValid(rememberMeToken, TokenEnum.REMEMBER_ME_TOKEN)) {
             User user = jwtService.getTokenByToken(rememberMeToken).getUser();
-            addCookies(user, response, new TokenEnum[]{TokenEnum.AUTH_TOKEN, TokenEnum.REFRESH_TOKEN, TokenEnum.REMEMBER_ME_TOKEN}, true);
+            addCookies(user, response, new TokenEnum[]{
+                    TokenEnum.AUTH_TOKEN,
+                    TokenEnum.REFRESH_TOKEN,
+                    TokenEnum.REMEMBER_ME_TOKEN
+            }, true);
 
             jwtService.deleteToken(rememberMeToken);
-
-            LoginResponse loginResponse = buildLoginResponse(user);
-            return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(buildLoginResponse(user));
         } else {
             throw new TokenNotValidException();
         }
@@ -78,15 +80,16 @@ public class AuthController {
         String csrfToken = request.getHeader(TokenEnum.CSRF_TOKEN.name());
         String refreshToken = getCookieValue(request, TokenEnum.REFRESH_TOKEN.name());
 
-        if(validateTokens(csrfToken, refreshToken)) {
+        if (validateTokens(csrfToken, refreshToken)) {
             User user = jwtService.getTokenByToken(csrfToken).getUser();
-            addCookies(user, response, new TokenEnum[]{TokenEnum.AUTH_TOKEN, TokenEnum.REFRESH_TOKEN}, false);
+            addCookies(user, response, new TokenEnum[]{
+                    TokenEnum.AUTH_TOKEN,
+                    TokenEnum.REFRESH_TOKEN
+            }, false);
 
             jwtService.deleteToken(csrfToken);
             jwtService.deleteToken(refreshToken);
-
-            LoginResponse loginResponse = buildLoginResponse(user);
-            return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(buildLoginResponse(user));
         } else {
             throw new TokenNotValidException();
         }
@@ -102,6 +105,11 @@ public class AuthController {
     public ResponseEntity confirmAccount(@RequestBody @Valid ConfirmAccountRequest request) {
         userService.confirmUser(request);
         return ResponseEntity.ok().build();
+    }
+
+    private boolean validateTokens(String csrfToken, String refreshToken) {
+        return jwtService.isTokenValid(csrfToken, TokenEnum.CSRF_TOKEN) &&
+                jwtService.isTokenValid(refreshToken, TokenEnum.REFRESH_TOKEN);
     }
 
     private User authenticateUser(LoginRequest loginRequest) {
@@ -149,11 +157,6 @@ public class AuthController {
     private Cookie createJwtCookie(User user, TokenEnum tokenEnum) {
         String tokenValue = jwtService.createToken(user, tokenEnum).getToken();
         return new Cookie(tokenEnum.name(), tokenValue);
-    }
-
-    private boolean validateTokens(String csrfToken, String refreshToken) {
-        return jwtService.isTokenValid(csrfToken, TokenEnum.CSRF_TOKEN) &&
-                jwtService.isTokenValid(refreshToken, TokenEnum.REFRESH_TOKEN);
     }
 
     private User fetchActiveUser(String email) {
