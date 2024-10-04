@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.security.service;
+package com.devraf.e_commerce.service;
 
 import com.devraf.e_commerce.db.entity.User;
 import com.devraf.e_commerce.db.repository.UserDAO;

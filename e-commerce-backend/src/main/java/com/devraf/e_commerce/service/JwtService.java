@@ -1,18 +1,17 @@
-package com.devraf.e_commerce.security.service;
+package com.devraf.e_commerce.service;
 
 import com.devraf.e_commerce.db.entity.Token;
 import com.devraf.e_commerce.db.entity.User;
 import com.devraf.e_commerce.db.repository.TokenDAO;
 import com.devraf.e_commerce.utils.Constants;
 import com.devraf.e_commerce.utils.TokenEnum;
+import com.devraf.e_commerce.utils.exception.TokenNotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,11 +20,8 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 
-@Setter
-@Getter
 @Component
 public class JwtService {
 
@@ -39,16 +35,24 @@ public class JwtService {
         tokenDAO.deleteByToken(token);
     }
 
+    public void deleteExpiredTokens() {
+        tokenDAO.deleteExpiredTokens();
+    }
+
     public Token createToken(User user, TokenEnum tokenType) {
         Date now = new Date();
+        Token token;
         Date expirationAt = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TIMES.get(tokenType));
 
-        Token token = tokenDAO.findByUserIdAndTokenType(user.getId(), tokenType.name())
-                .map(existingToken -> updateTokenIfExpired(existingToken, user, now, expirationAt))
-                .orElseGet(() -> createNewToken(user, tokenType, now, expirationAt));
+        if(tokenType.equals(TokenEnum.AUTH_TOKEN)) {
+            token = tokenDAO.findByUserIdAndTokenType(user.getId(), tokenType.name())
+                    .map(existingToken -> updateTokenIfExpired(existingToken, user, now, expirationAt))
+                    .orElseGet(() -> createNewToken(user, tokenType, now, expirationAt));
+        } else {
+            token = createNewToken(user, tokenType, now, expirationAt);
+        }
 
         tokenDAO.save(token);
-
         return token;
     }
 
@@ -56,7 +60,7 @@ public class JwtService {
         try {
             verifyToken(existingToken.getToken());
         } catch (ExpiredJwtException e) {
-            existingToken.setToken(generateToken(user.getEmail(), now, expirationAt));
+            existingToken.setToken(generateToken(user.getEmail(), now, expirationAt, existingToken.getTokenType()));
             existingToken.setExpiredAt(expirationAt);
             existingToken.setUpdatedAt(now);
         }
@@ -66,7 +70,7 @@ public class JwtService {
     private Token createNewToken(User user, TokenEnum tokenType, Date now, Date expirationAt) {
         return Token.builder()
                 .id(0L)
-                .token(generateToken(user.getEmail(), now, expirationAt))
+                .token(generateToken(user.getEmail(), now, expirationAt, tokenType.name()))
                 .tokenType(tokenType.name())
                 .user(user)
                 .active(true)
@@ -75,8 +79,9 @@ public class JwtService {
                 .build();
     }
 
-    private String generateToken(String username, Date createdAt, Date expirationAt) {
+    private String generateToken(String username, Date createdAt, Date expirationAt, String tokenType) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("tpe", tokenType);
 
         return Jwts.builder()
                 .claims().add(claims)
@@ -126,5 +131,10 @@ public class JwtService {
                 .filter(Token::getActive)
                 .filter(t -> !isTokenExpired(t.getToken()))
                 .isPresent();
+    }
+
+    public Token getTokenByToken(String token) {
+        return tokenDAO.findByToken(token)
+                .orElseThrow(TokenNotFoundException::new);
     }
 }

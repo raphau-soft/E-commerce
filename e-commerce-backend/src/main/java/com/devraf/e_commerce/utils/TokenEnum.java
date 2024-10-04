@@ -1,8 +1,10 @@
 package com.devraf.e_commerce.utils;
 
 public enum TokenEnum {
-    REFRESH,
-    AUTH,
-    RESET_PASSWORD,
-    CONFIRM_ACCOUNT
+    REFRESH_TOKEN,
+    AUTH_TOKEN,
+    RESET_PASSWORD_TOKEN,
+    CONFIRM_ACCOUNT_TOKEN,
+    CSRF_TOKEN,
+    REMEMBER_ME_TOKEN
 }

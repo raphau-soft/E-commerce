@@ -19,4 +19,6 @@ public class LoginRequest {
     @NotBlank
     @Size(max = 100)
     private String password;
+
+    private boolean rememberMe;
 }

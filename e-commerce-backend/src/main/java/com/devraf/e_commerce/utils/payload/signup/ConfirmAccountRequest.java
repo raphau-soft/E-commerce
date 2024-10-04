@@ -29,4 +29,9 @@ public class ConfirmAccountRequest implements Serializable {
     @NotNull
     @Pattern(regexp = "^\\+[0-9]{2} [0-9]{3} [0-9]{3} [0-9]{3}$", message = "phoneNumber should be valid")
     private String phoneNumber;
+
+    @NotBlank
+    @NotNull
+    @Size(max = 256)
+    private String token;
 }

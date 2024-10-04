@@ -1,12 +1,10 @@
 import { Component, ContentChild, OnInit } from "@angular/core";
 import { ERROR_MESSAGES } from "../../utils/constants";
 import { InputErrorDirective } from "../input-error/input-error.directive";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "e-form-field",
   standalone: true,
-  imports: [TranslateModule],
   templateUrl: "./form-field.component.html",
   styleUrl: "./form-field.component.scss",
 })
