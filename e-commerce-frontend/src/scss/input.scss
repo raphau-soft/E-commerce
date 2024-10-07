@@ -1,0 +1,37 @@
+@import "./variables.scss";
+
+.input {
+  position: relative;
+
+  label {
+    position: absolute;
+    margin-left: 10px;
+    cursor: text;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $placeholder-color;
+    background-color: white;
+    transition: 0.3s ease;
+  }
+
+  input {
+    height: 30px;
+    width: calc(100% - 20px);
+    padding: 8px 10px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 4px;
+    outline: none;
+    position: relative;
+
+    &:focus + label,
+    &:not(:placeholder-shown) + label,
+    &:valid + label {
+      top: 0px;
+      font-size: 16px;
+      color: black;
+      background-color: white;
+      padding: 0 5px;
+    }
+  }
+}

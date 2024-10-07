@@ -1,0 +1,41 @@
+<nav>
+  <a href="#" class="logo">Ecommerce</a>
+
+  <div class="search-bar">
+    <input type="text" placeholder="Search for products..." />
+    <button>Search</button>
+  </div>
+
+  <div class="icons">
+    <a href="#" class="notifications">
+      <i class="fas fa-bell"></i>
+      <span class="notification-count">3</span>
+    </a>
+    <a href="#"><i class="fas fa-shopping-cart"></i></a>
+  </div>
+
+  <div class="auth-links">
+    <a routerLink="/signin">Sign In</a>
+    <a routerLink="/signup">Sign Up</a>
+
+    <!--
+    <div class="dropdown">
+      <span>My Account</span>
+      <div class="dropdown-menu">
+        <a href="#">Profile</a>
+        <a href="#">Orders</a>
+        <a href="#">Logout</a>
+      </div>
+    </div>
+    -->
+  </div>
+</nav>
+<main>
+  <router-outlet></router-outlet>
+</main>
+<footer>
+  <p>&copy; 2024 All rights reserved.</p>
+  <p>Contact the developer: piszkorafal[at]gmail.com</p>
+</footer>
+
+<e-spinner></e-spinner>
