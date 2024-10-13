@@ -10,10 +10,16 @@ import org.springframework.context.annotation.Configuration;
 public class QueuesConfig {
 
     public static final String SIGNUP_ROUTING_KEY = "sign.up.queue";
+    public static final String FORGOT_PASSWORD_ROUTING_KEY = "forgot.password.queue";
 
     @Bean
-    public Queue myQueue() {
+    public Queue signUpQueue() {
         return new Queue(SIGNUP_ROUTING_KEY, false);
+    }
+
+    @Bean
+    public Queue forgotPasswordQueue() {
+        return new Queue(FORGOT_PASSWORD_ROUTING_KEY, false);
     }
 
     @Bean

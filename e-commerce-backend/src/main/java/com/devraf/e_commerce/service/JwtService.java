@@ -133,6 +133,15 @@ public class JwtService {
                 .isPresent();
     }
 
+    public Token getTokenOrThrow(String token, TokenEnum tokenEnum) {
+        return tokenDAO.findByTokenAndTokenType(token, tokenEnum.name())
+                .filter(Token::getActive)
+                .filter(t -> !isTokenExpired(t.getToken()))
+                .orElseThrow(
+                        () -> new TokenNotFoundException("Token invalid: " + token)
+                );
+    }
+
     public Token getTokenByToken(String token) {
         return tokenDAO.findByToken(token)
                 .orElseThrow(TokenNotFoundException::new);

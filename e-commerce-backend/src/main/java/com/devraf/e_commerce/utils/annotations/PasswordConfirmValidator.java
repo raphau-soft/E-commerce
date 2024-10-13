@@ -1,10 +1,12 @@
 package com.devraf.e_commerce.utils.annotations;
 
-import com.devraf.e_commerce.utils.payload.signup.SignupRequest;
+import com.devraf.e_commerce.payload.signup.SignupRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordConfirmValidator implements ConstraintValidator<ConfirmPassword, SignupRequest> {
+import java.lang.reflect.Field;
+
+public class PasswordConfirmValidator implements ConstraintValidator<ConfirmPassword, Object> {
 
     private String message;
 
@@ -14,16 +16,29 @@ public class PasswordConfirmValidator implements ConstraintValidator<ConfirmPass
     }
 
     @Override
-    public boolean isValid(SignupRequest request, ConstraintValidatorContext context) {
-        if(request.getPassword() == null) return true;
-        boolean isValid = request.getPassword().equals(request.getConfirmPassword());
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        try {
+            Field passwordField = value.getClass().getDeclaredField("password");
+            Field confirmPasswordField = value.getClass().getDeclaredField("confirmPassword");
 
-        if(!isValid) {
-            context.buildConstraintViolationWithTemplate(message)
-                    .addConstraintViolation()
-                    .disableDefaultConstraintViolation();
+            passwordField.setAccessible(true);
+            confirmPasswordField.setAccessible(true);
+
+            Object password = passwordField.get(value);
+            Object confirmPassword = confirmPasswordField.get(value);
+
+            boolean isValid = password.equals(confirmPassword);
+
+            if (!isValid) {
+                context.buildConstraintViolationWithTemplate(message)
+                        .addPropertyNode("confirmPassword")
+                        .addConstraintViolation()
+                        .disableDefaultConstraintViolation();
+            }
+
+            return isValid;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return false;
         }
-
-        return isValid;
     }
 }

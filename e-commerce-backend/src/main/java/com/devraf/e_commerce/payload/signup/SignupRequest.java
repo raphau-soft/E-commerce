@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.utils.payload.signup;
+package com.devraf.e_commerce.payload.signup;
 
 import com.devraf.e_commerce.utils.annotations.ConfirmPassword;
 import com.devraf.e_commerce.utils.annotations.Password;

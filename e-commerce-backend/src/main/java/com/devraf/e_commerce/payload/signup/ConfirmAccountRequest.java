@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.utils.payload.signup;
+package com.devraf.e_commerce.payload.signup;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

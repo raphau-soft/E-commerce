@@ -1,20 +1,25 @@
 package com.devraf.e_commerce.controller;
 
+import com.devraf.e_commerce.db.entity.Token;
 import com.devraf.e_commerce.db.entity.User;
+import com.devraf.e_commerce.payload.password.ResetPasswordRequest;
 import com.devraf.e_commerce.utils.TokenEnum;
 import com.devraf.e_commerce.utils.exception.TokenNotValidException;
 import com.devraf.e_commerce.utils.exception.UserNotActiveException;
-import com.devraf.e_commerce.utils.payload.login.LoginRequest;
-import com.devraf.e_commerce.utils.payload.login.LoginResponse;
-import com.devraf.e_commerce.utils.payload.signup.ConfirmAccountRequest;
-import com.devraf.e_commerce.utils.payload.signup.SignupRequest;
-import com.devraf.e_commerce.rabbit.SignUpProducer;
+import com.devraf.e_commerce.payload.login.LoginRequest;
+import com.devraf.e_commerce.payload.login.LoginResponse;
+import com.devraf.e_commerce.payload.signup.ConfirmAccountRequest;
+import com.devraf.e_commerce.payload.signup.SignupRequest;
+import com.devraf.e_commerce.rabbit.QueueProducer;
 import com.devraf.e_commerce.service.JwtService;
 import com.devraf.e_commerce.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -26,6 +31,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+
+import static com.devraf.e_commerce.config.QueuesConfig.FORGOT_PASSWORD_ROUTING_KEY;
+import static com.devraf.e_commerce.config.QueuesConfig.SIGNUP_ROUTING_KEY;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -39,7 +47,7 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private SignUpProducer signUpProducer;
+    private QueueProducer queueProducer;
 
     @Autowired
     private JwtService jwtService;
@@ -56,7 +64,7 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @PostMapping("/token/rememberMe")
+    @PostMapping("/remember-me")
     public ResponseEntity<LoginResponse> rememberMe(HttpServletRequest request, HttpServletResponse response) {
         String rememberMeToken = getCookieValue(request, TokenEnum.REMEMBER_ME_TOKEN.name());
 
@@ -93,6 +101,18 @@ public class AuthController {
         } else {
             throw new TokenNotValidException();
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity forgotPassword(@RequestParam(name = "email") @Email @NotBlank @Size(min = 5, max = 254) String email) {
+        sendForgotPasswordMessage(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        userService.resetPassword(request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/signup")
@@ -187,7 +207,11 @@ public class AuthController {
     }
 
     private void sendSignupMessage(SignupRequest signupRequest) {
-        signUpProducer.sendMessage(signupRequest);
+        queueProducer.sendMessage(SIGNUP_ROUTING_KEY, signupRequest);
+    }
+
+    private void sendForgotPasswordMessage(String email) {
+        queueProducer.sendMessage(FORGOT_PASSWORD_ROUTING_KEY, email);
     }
 
 }

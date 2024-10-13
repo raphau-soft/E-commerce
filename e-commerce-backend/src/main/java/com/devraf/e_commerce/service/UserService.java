@@ -1,12 +1,15 @@
 package com.devraf.e_commerce.service;
 
+import com.devraf.e_commerce.db.entity.Token;
 import com.devraf.e_commerce.db.entity.User;
 import com.devraf.e_commerce.db.repository.UserDAO;
+import com.devraf.e_commerce.payload.password.ResetPasswordRequest;
 import com.devraf.e_commerce.utils.TokenEnum;
 import com.devraf.e_commerce.utils.exception.TokenNotValidException;
-import com.devraf.e_commerce.utils.payload.signup.ConfirmAccountRequest;
-import com.devraf.e_commerce.utils.payload.signup.SignupRequest;
+import com.devraf.e_commerce.payload.signup.ConfirmAccountRequest;
+import com.devraf.e_commerce.payload.signup.SignupRequest;
 import com.devraf.e_commerce.utils.RolesEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -35,10 +39,10 @@ public class UserService {
         if(userOptional.isEmpty()) {
             User user = buildUser(request);
             user = userDAO.save(user);
-            emailService.sendEmail(user.getEmail(), "E-commerce sign up", "Your account have been created. Click link below to activate it.\n" +
+            emailService.sendEmail(user.getEmail(), "E-commerce sign up", "Your account has been created. Click link below to activate it.\n" +
                     "http://localhost:8080/e-commerce/confirm/" + jwtService.createToken(user, TokenEnum.CONFIRM_ACCOUNT_TOKEN).getToken());
         } else {
-            emailService.sendEmail(userOptional.get().getEmail(), "E-commerce sign up", "Hello did you forget that you have an active account?");
+            emailService.sendEmail(userOptional.get().getEmail(), "E-commerce sign up", "Hello, did you forget that you have an active account?");
         }
     }
 
@@ -53,6 +57,14 @@ public class UserService {
         } else {
             throw new TokenNotValidException("Token is invalid: " + request.getToken());
         }
+    }
+
+    public void forgotPassword(String email) {
+        User user = userDAO.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(email + " does not exist")
+        );
+        emailService.sendEmail(user.getEmail(), "E-commerce forgot password", "Click below to reset your password.\n" +
+                    "http://localhost:8080/e-commerce/forgot-password/" + jwtService.createToken(user, TokenEnum.RESET_PASSWORD_TOKEN).getToken());
     }
 
     private void updateUserDetails(User user, ConfirmAccountRequest request) {
@@ -79,5 +91,12 @@ public class UserService {
 
     public Optional<User> getUserByEmail(String email) {
         return userDAO.findByEmail(email);
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        User user = jwtService.getTokenOrThrow(request.getToken(), TokenEnum.RESET_PASSWORD_TOKEN).getUser();
+        user.setPassword(encoder.encode(request.getPassword()));
+        userDAO.save(user);
+        jwtService.deleteToken(request.getToken());
     }
 }

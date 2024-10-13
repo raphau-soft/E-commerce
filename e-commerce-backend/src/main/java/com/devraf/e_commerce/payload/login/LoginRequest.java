@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.utils.payload.login;
+package com.devraf.e_commerce.payload.login;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
