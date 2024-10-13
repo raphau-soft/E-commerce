@@ -4,5 +4,4 @@ Project is in very early deployment. I'm currently working on authentication/aut
 
 TODO functionalities for now:
 - role based authorization
-- config secrets security
 - case when someone signup and does not activate account
