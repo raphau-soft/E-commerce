@@ -1,7 +1,7 @@
 package com.devraf.e_commerce.service;
 
-import com.devraf.e_commerce.db.entity.User;
-import com.devraf.e_commerce.db.repository.UserDAO;
+import com.devraf.e_commerce.entity.User;
+import com.devraf.e_commerce.repository.UserDAO;
 import com.devraf.e_commerce.security.UserInfoDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

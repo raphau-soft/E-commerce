@@ -1,6 +1,6 @@
-package com.devraf.e_commerce.db.repository;
+package com.devraf.e_commerce.repository;
 
-import com.devraf.e_commerce.db.entity.Token;
+import com.devraf.e_commerce.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

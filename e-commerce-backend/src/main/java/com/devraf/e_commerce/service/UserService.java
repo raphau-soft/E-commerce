@@ -1,15 +1,13 @@
 package com.devraf.e_commerce.service;
 
-import com.devraf.e_commerce.db.entity.Token;
-import com.devraf.e_commerce.db.entity.User;
-import com.devraf.e_commerce.db.repository.UserDAO;
+import com.devraf.e_commerce.entity.User;
+import com.devraf.e_commerce.repository.UserDAO;
 import com.devraf.e_commerce.payload.password.ResetPasswordRequest;
 import com.devraf.e_commerce.utils.TokenEnum;
 import com.devraf.e_commerce.utils.exception.TokenNotValidException;
 import com.devraf.e_commerce.payload.signup.ConfirmAccountRequest;
 import com.devraf.e_commerce.payload.signup.SignupRequest;
 import com.devraf.e_commerce.utils.RolesEnum;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class UserService {
 
     @Autowired

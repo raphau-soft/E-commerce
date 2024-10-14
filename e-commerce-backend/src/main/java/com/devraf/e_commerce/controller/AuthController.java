@@ -1,7 +1,6 @@
 package com.devraf.e_commerce.controller;
 
-import com.devraf.e_commerce.db.entity.Token;
-import com.devraf.e_commerce.db.entity.User;
+import com.devraf.e_commerce.entity.User;
 import com.devraf.e_commerce.payload.password.ResetPasswordRequest;
 import com.devraf.e_commerce.utils.TokenEnum;
 import com.devraf.e_commerce.utils.exception.TokenNotValidException;
@@ -176,7 +175,9 @@ public class AuthController {
 
     private Cookie createJwtCookie(User user, TokenEnum tokenEnum) {
         String tokenValue = jwtService.createToken(user, tokenEnum).getToken();
-        return new Cookie(tokenEnum.name(), tokenValue);
+        Cookie cookie = new Cookie(tokenEnum.name(), tokenValue);
+        cookie.setPath("/api/");
+        return cookie;
     }
 
     private User fetchActiveUser(String email) {

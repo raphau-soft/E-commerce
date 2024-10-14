@@ -1,0 +1,2 @@
+INSERT INTO users VALUES (100, 'usern', 'name', 'surname', 'phoneNumber', 'testuser123@gmail.com', '$2a$10$PMCQdkO8UG/JKFJPfQ7irO5DXzVt.PPFBxDy/SQANzhj0ziZ1CesS', 'ROLE_USER', true, null, '2024-10-14T19:15:30.123', '2024-10-14T19:15:30.123');
+INSERT INTO users VALUES (101, 'userna', 'nameq', 'surnameq', 'phoneNumberq', 'testuser1234@gmail.com', '$2a$10$PMCQdkO8UG/JKFJPfQ7irO5DXzVt.PPFBxDy/SQANzhj0ziZ1CesS', 'ROLE_ADMIN', true, null, '2024-10-14T19:15:30.123', '2024-10-14T19:15:30.123');

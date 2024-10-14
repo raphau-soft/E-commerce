@@ -48,6 +48,7 @@ CREATE TABLE "product" (
   "user_id" bigint,
   "name" varchar,
   "description" varchar,
+  "image_url" varchar,
   "price" decimal,
   "quantity" integer,
   "category_id" integer,

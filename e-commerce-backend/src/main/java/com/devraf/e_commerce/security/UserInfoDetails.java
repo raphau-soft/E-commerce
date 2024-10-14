@@ -1,6 +1,6 @@
 package com.devraf.e_commerce.security;
 
-import com.devraf.e_commerce.db.entity.User;
+import com.devraf.e_commerce.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

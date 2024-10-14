@@ -1,6 +1,7 @@
-package com.devraf.e_commerce.db.entity;
+package com.devraf.e_commerce.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,12 +10,13 @@ import java.util.Set;
 
 @Data
 @Entity
+@Builder
 @Table(name = "product")
 public class Product {
 
     @Id
     @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -23,7 +25,11 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
+    private String imageUrl;
 
     @Column(nullable = false)
     private BigDecimal price;

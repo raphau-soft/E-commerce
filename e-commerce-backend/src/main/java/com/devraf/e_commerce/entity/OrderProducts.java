@@ -1,4 +1,4 @@
-package com.devraf.e_commerce.db.entity;
+package com.devraf.e_commerce.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

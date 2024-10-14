@@ -1,11 +1,11 @@
 package com.devraf.e_commerce.service;
 
-import com.devraf.e_commerce.db.entity.Token;
-import com.devraf.e_commerce.db.entity.User;
-import com.devraf.e_commerce.db.repository.TokenDAO;
+import com.devraf.e_commerce.entity.Token;
+import com.devraf.e_commerce.entity.User;
+import com.devraf.e_commerce.repository.TokenDAO;
 import com.devraf.e_commerce.utils.Constants;
 import com.devraf.e_commerce.utils.TokenEnum;
-import com.devraf.e_commerce.utils.exception.TokenNotFoundException;
+import com.devraf.e_commerce.utils.exception.EntityNotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -138,12 +138,12 @@ public class JwtService {
                 .filter(Token::getActive)
                 .filter(t -> !isTokenExpired(t.getToken()))
                 .orElseThrow(
-                        () -> new TokenNotFoundException("Token invalid: " + token)
+                        () -> new EntityNotFoundException("Token invalid: " + token)
                 );
     }
 
     public Token getTokenByToken(String token) {
         return tokenDAO.findByToken(token)
-                .orElseThrow(TokenNotFoundException::new);
+                .orElseThrow(EntityNotFoundException::new);
     }
 }
